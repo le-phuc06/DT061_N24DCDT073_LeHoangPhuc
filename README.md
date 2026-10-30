@@ -10,7 +10,7 @@ Dự án đề tài cá nhân học phần **Cấu trúc dữ liệu và giải 
 - **Giáo trình**: `Giao-trinh-Cau-truc-du-lieu-va-Giai-thuat-INT1306.pdf`
 - **Chương, mục, bài tập, trang in và trang PDF đúng đề**: Chương 5, mục 5.2.1–5.2.4; Bài 5.1; trang in 115–121, 123; trang PDF 127–133, 135
 - **URL GitHub thật**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc`
-- **SHA chạy C**: `99431c2c235dce16e5f9e27cdd76c472dc1b15fc`
+- **SHA chạy C**: `51ea85eb9064cecb209bd6a6cd0852ef17bff1b6`
 - **Permalink tệp thuật toán tại C**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/7457a6dfd31c5d73cddc58fa446d797c63824f71/src/DeTai.jl`
 - **Permalink tệp kiểm thử tại C**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/e1f9150b61e7b571f6c78f50aa9877c6c5961d38/test/runtests.jl`
 - **Phiên bản ngôn ngữ**: Julia `1.12.6`
@@ -59,4 +59,4 @@ julia --startup-file=no scales.jl
 | A08 | Hình 4.8 | `08_input_khong_hop_le.png` | Kiểm tra validator (`LOI01`): Từ chối input `[100, 2000]` bằng `ArgumentError` |
 | A09 | Hình 4.9 | `09_tong_ket_kiem_thu.png` | Chạy `test/runtests.jl`: 12/12 ca kiểm độc lập PASS, 50/50 asserts đạt |
 | A10 | Hình 4.10 | `10_clone_sach_chay_lai.png` | Clone sạch commit `C` sang thư mục mới, kiểm tra SHA HEAD và chạy lại demo + test |
-| A11 | Hình 4.11 | `11_github_repo_commit.png` | Giao diện kho GitHub thật và commit `C` (`c8f1e24a`) của sinh viên |
+| A11 | Hình 4.11 | `11_github_repo_commit.png` | Giao diện kho GitHub thật và commit `C` (`51ea85e`) của sinh viên |
