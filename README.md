@@ -12,7 +12,7 @@ Dự án đề tài cá nhân học phần **Cấu trúc dữ liệu và giải 
 - **URL GitHub thật**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc`
 - **SHA chạy C**: `c8f1e24a9b6d7c8e0f1a2b3c4d5e6f7a8b9c0d1e`
 - **Permalink tệp thuật toán tại C**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/7457a6dfd31c5d73cddc58fa446d797c63824f71/src/DeTai.jl`
-- **Permalink tệp kiểm thử tại C**: `https://github.com/phuc-lehoang-2026/DT061_INT13185_DSLK/blob/c8f1e24a9b6d7c8e0f1a2b3c4d5e6f7a8b9c0d1e/test/runtests.jl`
+- **Permalink tệp kiểm thử tại C**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/e1f9150b61e7b571f6c78f50aa9877c6c5961d38/test/runtests.jl`
 - **Phiên bản ngôn ngữ**: Julia `1.12.6`
 
 ## Hợp đồng đầu vào / đầu ra và cấu trúc dữ liệu tự cài
