@@ -1,0 +1,13 @@
+PS C:\Users\LeHoangPhuc\DT061_INT13185_DSLK> julia --startup-file=no scales.jl
+================================================================================
+KHẢO SÁT BA QUY MÔ HỢP LỆ Q1 (n=5), Q2 (n=20), Q3 (n=100) — ĐỀ TÀI DT061
+================================================================================
+Bộ    Quy mô n    Thêm đầu    Tìm cuối    Xóa cuối    Thêm cuối (không đuôi)  Thêm cuối (có đuôi)
+------------------------------------------------------------------------------------------------
+Q1    n = 5       1 bước      5 bước      5 bước      5 bước (O(n))           1 bước (O(1))
+Q2    n = 20      1 bước      20 bước     20 bước     20 bước (O(n))          1 bước (O(1))
+Q3    n = 100     1 bước      100 bước    100 bước    100 bước (O(n))         1 bước (O(1))
+================================================================================
+Nhận xét: Khi n tăng từ 5 -> 20 (gấp 4 lần) và từ 20 -> 100 (gấp 5 lần),
+số bước duyệt của Tìm kiếm, Xóa nút cuối và Thêm cuối (không giữ đuôi) tăng
+tuyến tính đúng tỉ lệ O(n); trong khi Thêm đầu và Thêm cuối (giữ con trỏ đuôi) luôn cố định 1 bước O(1).

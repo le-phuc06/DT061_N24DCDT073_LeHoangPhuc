@@ -1,0 +1,81 @@
+PS C:\Users\LeHoangPhuc\DT061_INT13185_DSLK> julia --startup-file=no demo.jl
+CHƯƠNG TRÌNH MINH HỌA ĐỀ TÀI DT061 — DANH SÁCH LIÊN KẾT ĐƠN (JULIA 1.12.6)
+Sinh viên: Lê Hoàng Phúc | MSSV: N24DCDT073 | Lớp: D24CQDT01-N
+======================================================================
+[VD01 / A01] Ví dụ 1 trên phiếu giao đề tài
+- Input dãy ban đầu : [5, 9]
+- Chuỗi lệnh thực thi: them_dau(2); xoa(9); them_cuoi(7)
+- Expected (Kỳ vọng) : [2, 5, 7]; n=3; xoa(9)=true
+- Lần vết từng bước  :
+    Bước 1: them_dau(2) -> kq=true | Trạng thái: [2, 5, 9]; n=3
+    Bước 2: xoa(9) -> kq=true | Trạng thái: [2, 5]; n=2
+    Bước 3: them_cuoi(7) -> kq=true | Trạng thái: [2, 5, 7]; n=3
+- Actual (Thực tế)   : [2, 5, 7]; n=3 | Duyệt độc lập: n=3 | Bất biến: true
+- Kết luận           : PASS (Khớp 100% kỳ vọng)
+======================================================================
+[VD02 / A02] Ví dụ 2 trên phiếu giao đề tài (xóa lần xuất hiện đầu tiên của giá trị trùng)
+- Input dãy ban đầu : [4, 4]
+- Chuỗi lệnh thực thi: xoa(4); tim(4)
+- Expected (Kỳ vọng) : [4]; n=1; xoa(4)=true; tim(4)=true
+- Lần vết từng bước  :
+    Bước 1: xoa(4) -> kq=true | Trạng thái: [4]; n=1
+    Bước 2: tim(4) -> kq=true | Trạng thái: [4]; n=1
+- Actual (Thực tế)   : [4]; n=1 | Duyệt độc lập: n=1 | Bất biến: true
+- Kết luận           : PASS (Khớp 100% kỳ vọng)
+======================================================================
+[TK01 / A03] Ca tự thiết kế 1 (thao tác xen kẽ thêm đầu, thêm cuối và xóa nút giữa)
+- Input dãy ban đầu : [10, 20, 30]
+- Chuỗi lệnh thực thi: them_dau(5); them_cuoi(40); xoa(20)
+- Expected (Kỳ vọng) : [5, 10, 30, 40]; n=4; xoa(20)=true
+- Lần vết từng bước  :
+    Bước 1: them_dau(5) -> kq=true | Trạng thái: [5, 10, 20, 30]; n=4
+    Bước 2: them_cuoi(40) -> kq=true | Trạng thái: [5, 10, 20, 30, 40]; n=5
+    Bước 3: xoa(20) -> kq=true | Trạng thái: [5, 10, 30, 40]; n=4
+- Actual (Thực tế)   : [5, 10, 30, 40]; n=4 | Duyệt độc lập: n=4 | Bất biến: true
+- Kết luận           : PASS (Khớp 100% kỳ vọng)
+======================================================================
+[TK02 / A04] Ca tự thiết kế 2 (danh sách nhiều giá trị trùng lặp, kiểm tra chỉ xóa lần đầu)
+- Input dãy ban đầu : [2, 2, 3, 2]
+- Chuỗi lệnh thực thi: xoa(2); tim(2)
+- Expected (Kỳ vọng) : [2, 3, 2]; n=3; xoa(2)=true; tim(2)=true
+- Lần vết từng bước  :
+    Bước 1: xoa(2) -> kq=true | Trạng thái: [2, 3, 2]; n=3
+    Bước 2: tim(2) -> kq=true | Trạng thái: [2, 3, 2]; n=3
+- Actual (Thực tế)   : [2, 3, 2]; n=3 | Duyệt độc lập: n=3 | Bất biến: true
+- Kết luận           : PASS (Khớp 100% kỳ vọng)
+======================================================================
+[BIEN01 / A05] Ca biên 1 — Danh sách rỗng: tìm kiếm và xóa trên danh sách rỗng (Ca phiếu 1 & 2)
+- Input dãy ban đầu : Int64[]
+- Chuỗi lệnh thực thi: tim(3); xoa(3)
+- Expected (Kỳ vọng) : []; n=0; tim(3)=false; xoa(3)=false
+- Lần vết từng bước  :
+    Bước 1: tim(3) -> kq=false | Trạng thái: []; n=0
+    Bước 2: xoa(3) -> kq=false | Trạng thái: []; n=0
+- Actual (Thực tế)   : []; n=0 | Duyệt độc lập: n=0 | Bất biến: true
+- Kết luận           : PASS (Khớp 100% kỳ vọng)
+======================================================================
+[BIEN02 / A06] Ca biên 2 — Danh sách 1 phần tử: xóa nút duy nhất về rỗng (Ca phiếu 3)
+- Input dãy ban đầu : [7]
+- Chuỗi lệnh thực thi: xoa(7)
+- Expected (Kỳ vọng) : []; n=0; xoa(7)=true; dau=nothing, duoi=nothing
+- Lần vết từng bước  :
+    Bước 1: xoa(7) -> kq=true | Trạng thái: []; n=0
+- Actual (Thực tế)   : []; n=0 | Duyệt độc lập: n=0 | Bất biến: true
+- Kết luận           : PASS (Khớp 100% kỳ vọng)
+======================================================================
+[BIEN03 / A07] Ca biên 3 — Xóa nút cuối và thêm cuối ngay sau đó (Ca phiếu 5)
+- Input dãy ban đầu : [1, 3]
+- Chuỗi lệnh thực thi: xoa(3); them_cuoi(5)
+- Expected (Kỳ vọng) : [1, 5]; n=2; xoa(3)=true; duoi=5
+- Lần vết từng bước  :
+    Bước 1: xoa(3) -> kq=true | Trạng thái: [1]; n=1
+    Bước 2: them_cuoi(5) -> kq=true | Trạng thái: [1, 5]; n=2
+- Actual (Thực tế)   : [1, 5]; n=2 | Duyệt độc lập: n=2 | Bất biến: true
+- Kết luận           : PASS (Khớp 100% kỳ vọng)
+======================================================================
+[LOI01 / A08] Kiểm tra validator từ chối dữ liệu vi phạm miền [-1000, 1000]
+- Input vi phạm      : [100, 2000] (phần tử 2000 > 1000)
+- Expected (Kỳ vọng) : Ném ngoại lệ ArgumentError và dừng xử lý
+- Actual (Thực tế)   : Bắt đúng ngoại lệ ArgumentError: Phần tử tại vị trí 2 có giá trị 2000 ngoài miền [-1000, 1000].
+- Kết luận           : PASS (Validator từ chối hợp lệ)
+======================================================================
