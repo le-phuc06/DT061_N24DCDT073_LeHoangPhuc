@@ -10,7 +10,7 @@ Dự án đề tài cá nhân học phần **Cấu trúc dữ liệu và giải 
 - **Giáo trình**: `Giao-trinh-Cau-truc-du-lieu-va-Giai-thuat-INT1306.pdf`
 - **Chương, mục, bài tập, trang in và trang PDF đúng đề**: Chương 5, mục 5.2.1–5.2.4; Bài 5.1; trang in 115–121, 123; trang PDF 127–133, 135
 - **URL GitHub thật**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc`
-- **SHA chạy C**: `51ea85eb9064cecb209bd6a6cd0852ef17bff1b6`
+- **SHA chạy C**: `fd67233075439d9ca0ea75607b05c9c08bb7f532`
 - **Permalink tệp thuật toán tại C**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/7457a6dfd31c5d73cddc58fa446d797c63824f71/src/DeTai.jl`
 - **Permalink tệp kiểm thử tại C**: `https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/e1f9150b61e7b571f6c78f50aa9877c6c5961d38/test/runtests.jl`
 - **Phiên bản ngôn ngữ**: Julia `1.12.6`
