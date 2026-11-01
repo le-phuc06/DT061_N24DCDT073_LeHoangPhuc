@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DT061 — Hệ thống Mô phỏng & Kiểm thử Danh sách Liên kết Đơn (Lê Hoàng Phúc - N24DCDT073)</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="giao_dien/style.css" />
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border-b border-indigo-800/40 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1.5">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 mono">MÃ ĐỀ: DT061</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 mono">INT13185 — Nhóm 03</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/30 mono">Julia 1.12.6</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+            Cài Đặt Danh Sách Liên Kết Đơn Với Thêm, Tìm Và Xóa
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">
+            Học viện Công nghệ Bưu chính Viễn thông Cơ sở tại TP.HCM — Khoa Kỹ thuật Điện tử 2
+          </p>
+        </div>
+
+        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-2.5 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5">
+          <div>
+            <div class="text-slate-400 text-xs">Sinh viên thực hiện</div>
+            <div class="font-bold text-white">Lê Hoàng Phúc <span class="text-indigo-300 mono">(N24DCDT073)</span></div>
+            <div class="text-slate-300 text-xs">Lớp: <span class="mono font-medium">D24CQDT01-N</span></div>
+          </div>
+          <div class="hidden sm:block h-8 w-px bg-white/15"></div>
+          <div>
+            <div class="text-slate-400 text-xs">Giảng viên hướng dẫn</div>
+            <div class="font-bold text-white">ThS. Hồ Nhựt Minh</div>
+            <div class="text-emerald-300 text-xs mono">SHA: c3fda8f7 (50/50 PASS)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="mt-4 flex flex-wrap gap-1.5 border-t border-white/10 pt-3" aria-label="Điều hướng chính">
+        <button id="tabBtn-sim" type="button" onclick="switchTab('sim')" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm">
+          <span>🔗</span> 1. Mô phỏng & Lần vết Trực quan
+        </button>
+        <button id="tabBtn-tests" type="button" onclick="switchTab('tests')" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 text-slate-300 hover:bg-white/10">
+          <span>✅</span> 2. Bộ Kiểm thử 12 Ca (50/50 PASS)
+        </button>
+        <button id="tabBtn-scales" type="button" onclick="switchTab('scales')" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 text-slate-300 hover:bg-white/10">
+          <span>📊</span> 3. Khảo sát Quy mô Q1–Q3 & Độ phức tạp
+        </button>
+        <button id="tabBtn-code" type="button" onclick="switchTab('code')" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 text-slate-300 hover:bg-white/10">
+          <span>💻</span> 4. Mã nguồn Julia & Đối chiếu Rubric
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+
+    <!-- ==================== TAB 1: INTERACTIVE SIMULATOR ==================== -->
+    <section id="tabPanel-sim" class="space-y-6">
+
+      <!-- Top Preset Bar: 12 Cases Quick Load -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+          <div>
+            <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+              Nạp nhanh 12 Ca Kiểm Thử Độc Lập trên Phiếu Giao Đề Tài (A01 – KT12)
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Bấm vào bất kỳ ca nào để tự động nạp mảng ban đầu, chạy chuỗi lệnh và tạo bảng lần vết từng bước
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <label for="animSpeedSelect" class="text-xs font-medium text-slate-600">Tốc độ mô phỏng:</label>
+            <select id="animSpeedSelect" class="text-xs border border-slate-300 rounded-lg px-2.5 py-1.5 bg-slate-50 font-medium text-slate-700">
+              <option value="550">Bình thường (0.55s/bước)</option>
+              <option value="250">Nhanh (0.25s/bước)</option>
+              <option value="900">Chậm — Dễ giảng giải (0.9s/bước)</option>
+              <option value="0">Tức thì (0s)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="presetButtonsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2"></div>
+      </div>
+
+      <!-- Control Panel + Invariant Status Bar -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+        <!-- Left Controls (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800">Bảng Điều Khiển Thao Tác Trực Tiếp</h3>
+            <span class="text-xs mono px-2 py-0.5 rounded bg-slate-100 text-slate-600">Miền hợp lệ: x ∈ [-1000, 1000], n ≤ 1000</span>
+          </div>
+
+          <!-- Single Value Operations -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+            <div class="sm:col-span-4">
+              <label for="inputValX" class="block text-xs font-semibold text-slate-700 mb-1">Giá trị số nguyên <span class="mono text-indigo-600">x</span>:</label>
+              <input id="inputValX" type="number" value="7" placeholder="VD: 7 (-1000..1000)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mono" />
+            </div>
+            <div class="sm:col-span-8 flex flex-wrap gap-2">
+              <button id="btnThemDau" type="button" onclick="handleSingleOp('them_dau')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition">
+                + Thêm đầu <span class="mono opacity-80">O(1)</span>
+              </button>
+              <button id="btnThemCuoi" type="button" onclick="handleSingleOp('them_cuoi')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">
+                + Thêm cuối (có đuôi) <span class="mono opacity-80">O(1)</span>
+              </button>
+              <button id="btnThemCuoiKoDuoi" type="button" onclick="handleSingleOp('them_cuoi_ko_duoi')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-sky-700 hover:bg-sky-800 text-white shadow-sm transition">
+                + Thêm cuối (duyệt) <span class="mono opacity-80">O(n)</span>
+              </button>
+              <button id="btnTim" type="button" onclick="handleSingleOp('tim')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white shadow-sm transition">
+                🔍 Tìm <span class="mono opacity-90">tim(x)</span>
+              </button>
+              <button id="btnXoa" type="button" onclick="handleSingleOp('xoa')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white shadow-sm transition">
+                🗑️ Xóa lần đầu <span class="mono opacity-90">xoa!(x)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Batch Runner (For Defense C6) -->
+          <div class="pt-3 border-t border-slate-100 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-700">Chạy Kịch Bản Tùy Chỉnh (Phục vụ Bảo Vệ C6 — Nhập Input Mới)</span>
+              <button id="btnResetEmpty" type="button" onclick="resetToEmpty()" class="text-xs font-semibold text-rose-600 hover:text-rose-700 underline">
+                Làm rỗng danh sách []
+              </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              <div class="sm:col-span-5">
+                <label for="customInitInput" class="block text-xs font-medium text-slate-600 mb-1">Dãy khởi tạo ban đầu (cách nhau dấu phẩy):</label>
+                <input id="customInitInput" type="text" value="5, 9" placeholder="VD: 5, 9 hoặc để trống []" class="w-full px-3 py-1.5 text-xs sm:text-sm border border-slate-300 rounded-xl mono" />
+              </div>
+              <div class="sm:col-span-7">
+                <label for="customCmdsInput" class="block text-xs font-medium text-slate-600 mb-1">Chuỗi lệnh (them_dau, them_cuoi, tim, xoa):</label>
+                <input id="customCmdsInput" type="text" value="them_dau(2); xoa(9); them_cuoi(7)" placeholder="VD: them_dau(2); xoa(9); them_cuoi(7)" class="w-full px-3 py-1.5 text-xs sm:text-sm border border-slate-300 rounded-xl mono" />
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="btnRunCustomBatch" type="button" onclick="runCustomBatch()" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition">
+                ▶ Khởi tạo & Chạy Chuỗi Lệnh
+              </button>
+              <button id="btnTestInvalidInput" type="button" onclick="runPresetCase('LOI01')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition">
+                ⚠️ Thử Input Vi Phạm [100, 2000] (LOI01)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right State & Structural Invariants (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 class="text-sm sm:text-base font-bold text-slate-800">Trạng Thái Cấu Trúc & Bất Biến</h3>
+              <span id="invariantBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 mono">
+                kiem_tra_bat_bien = true
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3">
+              <div class="bg-rose-50 border border-rose-200 rounded-xl p-2.5">
+                <div class="text-[11px] font-semibold text-rose-600 uppercase">Con trỏ đầu (dau)</div>
+                <div id="statDau" class="text-sm sm:text-base font-extrabold text-rose-900 mono mt-0.5">Nut(2)</div>
+              </div>
+              <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5">
+                <div class="text-[11px] font-semibold text-amber-700 uppercase">Con trỏ cuối (duoi)</div>
+                <div id="statDuoi" class="text-sm sm:text-base font-extrabold text-amber-900 mono mt-0.5">Nut(7)</div>
+              </div>
+              <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-2.5">
+                <div class="text-[11px] font-semibold text-indigo-600 uppercase">Biến đếm (so_nut)</div>
+                <div id="statSoNut" class="text-sm sm:text-base font-extrabold text-indigo-900 mono mt-0.5">3</div>
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                <div class="text-[11px] font-semibold text-emerald-700 uppercase">dem_nut_duyet(ds)</div>
+                <div id="statDemDuyet" class="text-sm sm:text-base font-extrabold text-emerald-900 mono mt-0.5">3</div>
+              </div>
+            </div>
+
+            <!-- Output String in_danh_sach(ds) -->
+            <div class="mt-3 bg-slate-900 text-slate-100 rounded-xl p-3 mono text-xs space-y-1.5">
+              <div class="flex items-center justify-between text-slate-400 text-[11px]">
+                <span>Chuỗi xuất chuẩn: in_danh_sach(ds)</span>
+                <span id="lastStepCounter" class="text-amber-300 font-semibold">Số bước thao tác gần nhất: 1 bước</span>
+              </div>
+              <div id="statChuoiKetQua" class="text-emerald-400 font-bold text-sm break-all">[2, 5, 7]; n=3</div>
+            </div>
+          </div>
+
+          <!-- Active Operation Status Banner -->
+          <div id="opStatusBanner" class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-xs text-indigo-950">
+            <div class="font-bold text-indigo-900 mb-0.5" id="opStatusTitle">Đang hiển thị: Ca VD01 (Ví dụ 1 trên phiếu giao đề tài)</div>
+            <div id="opStatusDesc" class="text-indigo-800 leading-relaxed">
+              Khởi tạo [5, 9] → them_dau!(2) → xoa!(9) → them_cuoi!(7) ⇒ Kết quả đạt [2, 5, 7]; n=3 (Khớp 100% kỳ vọng).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Memory Diagram Canvas -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-800">
+              Sơ Đồ Mô Hình Liên Kết Bộ Nhớ Động <span class="mono text-indigo-600">(DanhSachLienKet &amp; Nut)</span>
+            </h3>
+            <p class="text-xs text-slate-500">
+              Mỗi nút gồm <span class="mono font-semibold text-slate-700">gia_tri::Int</span> và liên kết <span class="mono font-semibold text-slate-700">ke_tiep::Union{Nut, Nothing}</span>; nút cuối luôn trỏ tới <span class="mono font-semibold text-slate-700">nothing</span>.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-xs">
+            <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-rose-500 inline-block"></span> Con trỏ <code class="mono">dau</code></span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-500 inline-block"></span> Con trỏ <code class="mono">duoi</code></span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span> Đang khớp / vừa chèn</span>
+          </div>
+        </div>
+
+        <div id="linkedListCanvas" class="min-h-[175px] bg-slate-50/80 border border-dashed border-slate-300 rounded-2xl p-4 sm:p-6 flex items-center overflow-x-auto">
+          <!-- Populated dynamically by renderLinkedList() -->
+        </div>
+      </div>
+
+      <!-- Step-by-Step Trace Table (Bảng Lần Vết Từng Bước) -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-4 sm:px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-800">
+              Bảng Lần Vết Từng Bước Thực Thi <span class="text-xs font-normal text-slate-500">(Tương ứng Bảng 3.3 &amp; Chương 4 trong Báo cáo)</span>
+            </h3>
+          </div>
+          <button id="btnClearTrace" type="button" onclick="clearTraceHistory()" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-1 rounded-lg border border-slate-200 hover:bg-slate-50 self-start sm:self-auto">
+            Xóa lịch sử lần vết
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100/80 text-slate-700 border-b border-slate-200">
+                <th class="py-2.5 px-3 sm:px-4 font-bold w-16">Bước</th>
+                <th class="py-2.5 px-3 sm:px-4 font-bold">Lệnh thao tác</th>
+                <th class="py-2.5 px-3 sm:px-4 font-bold">Trạng thái trước</th>
+                <th class="py-2.5 px-3 sm:px-4 font-bold">Trạng thái sau</th>
+                <th class="py-2.5 px-3 sm:px-4 font-bold">Kết quả trả về &amp; Số bước</th>
+                <th class="py-2.5 px-3 sm:px-4 font-bold">Giải thích biến con trỏ (dau, duoi, truoc, hien_tai)</th>
+              </tr>
+            </thead>
+            <tbody id="traceTableBody" class="divide-y divide-slate-200"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 2: 12 AUTOMATED TEST CASES ==================== -->
+    <section id="tabPanel-tests" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-900">
+              Bộ Kiểm Thử Tự Động 12 Ca Độc Lập — <span class="mono text-indigo-600">test/runtests.jl</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              Bao phủ đầy đủ 2 ví dụ trên phiếu (<code class="mono">VD01, VD02</code>), 5 ca bắt buộc ở mục 6 của phiếu (<code class="mono">Ca phiếu 1 → 5</code>), ca tự thiết kế, ca biên, ngoại lệ <code class="mono">ArgumentError</code> và bất biến cấu trúc.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-xl text-right">
+              <div class="text-[11px] font-semibold text-emerald-700 uppercase">Tổng kết Kiểm thử</div>
+              <div id="testSummaryBadge" class="text-sm font-extrabold text-emerald-900 mono">12/12 Ca PASS (50/50 Asserts)</div>
+            </div>
+            <button id="btnRunAllTests" type="button" onclick="executeAllTests()" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition">
+              ▶ Chạy lại 12 Ca Kiểm Thử
+            </button>
+          </div>
+        </div>
+
+        <!-- Mapping 5 Mandatory Sheet Cases (Bảng 4.1) -->
+        <div class="mt-4 bg-indigo-50/60 border border-indigo-100 rounded-xl p-3.5">
+          <div class="text-xs font-bold text-indigo-950 mb-2">
+            📌 Ánh xạ 5 Ca Kiểm Bắt Buộc ở Mục 6 Phiếu Giao Đề Tài DT061 (Bảng 4.1 trong Báo cáo):
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
+            <div class="bg-white p-2.5 rounded-lg border border-indigo-100">
+              <span class="font-bold text-indigo-700">Ca phiếu 1:</span> <code class="mono">[]; tim(3) -&gt; false</code>
+              <div class="text-[11px] text-slate-500 mt-0.5">→ Nằm tại <strong>BIEN01</strong> (Hình 4.5 / A05)</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-indigo-100">
+              <span class="font-bold text-indigo-700">Ca phiếu 2:</span> <code class="mono">[]; xoa(3) -&gt; false</code>
+              <div class="text-[11px] text-slate-500 mt-0.5">→ Nằm tại <strong>BIEN01</strong> (Hình 4.5 / A05)</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-indigo-100">
+              <span class="font-bold text-indigo-700">Ca phiếu 3:</span> <code class="mono">[7]; xoa(7) -&gt; [], n=0</code>
+              <div class="text-[11px] text-slate-500 mt-0.5">→ Nằm tại <strong>BIEN02</strong> (Hình 4.6 / A06)</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-indigo-100">
+              <span class="font-bold text-indigo-700">Ca phiếu 4:</span> <code class="mono">[2,2,3]; xoa(2) -&gt; [2,3]</code>
+              <div class="text-[11px] text-slate-500 mt-0.5">→ Nằm tại <strong>TK02</strong> (Hình 4.4 / A04)</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-indigo-100">
+              <span class="font-bold text-indigo-700">Ca phiếu 5:</span> <code class="mono">[1,3]; xoa(3); them_cuoi(5)</code>
+              <div class="text-[11px] text-slate-500 mt-0.5">→ Nằm tại <strong>BIEN03</strong> (Hình 4.7 / A07)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 12 Test Cases Table (Bảng 4.2 & 4.3) -->
+        <div class="mt-5 overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                <th class="py-2.5 px-3 font-bold">Mã ca</th>
+                <th class="py-2.5 px-3 font-bold">Nguồn &amp; Mục tiêu kiểm thử</th>
+                <th class="py-2.5 px-3 font-bold">Input đủ tái hiện</th>
+                <th class="py-2.5 px-3 font-bold">Expected (Kỳ vọng)</th>
+                <th class="py-2.5 px-3 font-bold">Actual (Thực chạy)</th>
+                <th class="py-2.5 px-3 font-bold">Kết luận</th>
+                <th class="py-2.5 px-3 font-bold">Minh chứng &amp; Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="testCasesTableBody" class="divide-y divide-slate-200"></tbody>
+          </table>
+        </div>
+
+        <!-- Terminal Output Log (A09 / tests.log) -->
+        <div class="mt-6">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-600">Nhật ký Terminal chuẩn (docs/logs/tests.log — Hình 4.9 / Ảnh A09)</span>
+            <span class="text-xs mono text-slate-500">SHA: c3fda8f755102a969373851c48d6731e0df5b509</span>
+          </div>
+          <pre id="terminalTestOutput" class="bg-slate-950 text-emerald-400 p-4 rounded-xl text-xs mono overflow-x-auto leading-relaxed border border-slate-800"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: SCALES & COMPLEXITY BENCHMARK ==================== -->
+    <section id="tabPanel-scales" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-900">
+              Khảo Sát Ba Quy Mô Hợp Lệ <span class="mono text-indigo-600">Q1 (n=5), Q2 (n=20), Q3 (n=100)</span> — <span class="mono">scales.jl</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              Thực hiện đúng Mục 7 trên phiếu giao đề tài: Đếm số nút đi qua khi tìm, xóa và thêm cuối; tách riêng thao tác in khỏi thao tác tìm.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <label for="customScaleN" class="text-xs font-semibold text-slate-700">Thử quy mô <span class="mono">n</span> bất kỳ (1..1000):</label>
+            <input id="customScaleN" type="number" min="1" max="1000" value="50" class="w-24 px-2.5 py-1.5 text-xs sm:text-sm border border-slate-300 rounded-xl mono" />
+            <button id="btnAddScaleRow" type="button" onclick="runCustomScale()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition">
+              Đếm số bước
+            </button>
+          </div>
+        </div>
+
+        <!-- Chart + Table Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-5 items-center">
+          <div class="lg:col-span-6 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+            <div class="text-xs font-bold text-slate-700 mb-2">
+              Biểu đồ đối chiếu số bước thực nghiệm <span class="mono">O(1)</span> và <span class="mono">O(n)</span>
+            </div>
+            <div class="relative h-72 w-full">
+              <canvas id="scalesChart"></canvas>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 space-y-4">
+            <div class="overflow-x-auto border border-slate-200 rounded-xl">
+              <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                    <th class="py-2.5 px-3 font-bold">Bộ</th>
+                    <th class="py-2.5 px-3 font-bold">Quy mô n</th>
+                    <th class="py-2.5 px-3 font-bold">Thêm đầu</th>
+                    <th class="py-2.5 px-3 font-bold">Thêm cuối (có đuôi)</th>
+                    <th class="py-2.5 px-3 font-bold">Thêm cuối (ko đuôi)</th>
+                    <th class="py-2.5 px-3 font-bold">Tìm cuối</th>
+                    <th class="py-2.5 px-3 font-bold">Xóa cuối</th>
+                  </tr>
+                </thead>
+                <tbody id="scalesTableBody" class="divide-y divide-slate-200"></tbody>
+              </table>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-950 space-y-1.5">
+              <div class="font-bold text-amber-900">Nhận xét thực nghiệm &amp; Hiệu quả của con trỏ cuối (<code class="mono">duoi</code>):</div>
+              <p class="leading-relaxed">
+                • Khi kích thước danh sách tăng gấp 4 lần từ <strong>Q1 (n = 5)</strong> lên <strong>Q2 (n = 20)</strong> và gấp 5 lần lên <strong>Q3 (n = 100)</strong>, số bước duyệt của <code class="mono">tim(ds, n)</code>, <code class="mono">xoa!(ds, n)</code> và <code class="mono">them_cuoi_khong_duoi!(ds, n)</code> tăng tuyến tính đúng tỉ lệ 1:1 (<code class="mono">5 → 20 → 100 bước</code>), khớp hoàn toàn với độ phức tạp <code class="mono">O(n)</code>.
+              </p>
+              <p class="leading-relaxed">
+                • Nhờ duy trì thêm con trỏ <code class="mono">duoi</code> (yêu cầu nâng cao của phiếu), thao tác <code class="mono">them_cuoi!(ds, x)</code> giảm từ <code class="mono">O(n)</code> xuống đúng <strong>1 bước <code class="mono">O(1)</code></strong> ở mọi quy mô <code class="mono">n</code>, đồng thời vẫn cập nhật chính xác <code class="mono">duoi = truoc</code> khi xóa nút cuối (đã kiểm chứng tại ca <code class="mono">BIEN03</code>).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: SOURCE CODE & RUBRIC MAPPING ==================== -->
+    <section id="tabPanel-code" class="hidden space-y-6">
+
+      <!-- GitHub & Version Metadata Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+        <h2 class="text-base sm:text-lg font-extrabold text-slate-900 mb-3">
+          Thông Tin Định Danh Kho Mã Nguồn GitHub &amp; Đối Chiếu 6 Tiêu Chí Rubric (C1 – C6)
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-1.5">
+            <div><span class="font-semibold text-slate-600">URL GitHub thật:</span> <a href="https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc" target="_blank" rel="noopener noreferrer" class="text-indigo-600 font-bold hover:underline break-all mono">https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc</a></div>
+            <div><span class="font-semibold text-slate-600">SHA C / SHA S đầy đủ:</span> <code class="mono font-bold text-slate-800 break-all">c3fda8f755102a969373851c48d6731e0df5b509</code></div>
+            <div><span class="font-semibold text-slate-600">SHA mốc chụp clone (Hình 4.10):</span> <code class="mono text-slate-700 break-all">51ea85eb9064cecb209bd6a6cd0852ef17bff1b6</code></div>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-1.5">
+            <div><span class="font-semibold text-slate-600">Permalink thuật toán (<code class="mono">src/DeTai.jl</code>):</span> <a href="https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/c3fda8f755102a969373851c48d6731e0df5b509/src/DeTai.jl" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline break-all mono">.../blob/c3fda8f7.../src/DeTai.jl</a></div>
+            <div><span class="font-semibold text-slate-600">Permalink kiểm thử (<code class="mono">test/runtests.jl</code>):</span> <a href="https://github.com/le-phuc06/DT061_N24DCDT073_LeHoangPhuc/blob/c3fda8f755102a969373851c48d6731e0df5b509/test/runtests.jl" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline break-all mono">.../blob/c3fda8f7.../test/runtests.jl</a></div>
+            <div><span class="font-semibold text-slate-600">Căn cứ giáo trình INT1306:</span> Chương 5, mục 5.2.1–5.2.4; Bài 5.1; trang in 115–121, 123 (PDF 127–133, 135)</div>
+          </div>
+        </div>
+
+        <!-- 6 Rubric Criteria Summary -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4 text-xs">
+          <div class="p-3 rounded-xl border border-slate-200 bg-white">
+            <div class="font-bold text-indigo-700">C1. Đặc tả bài toán &amp; I/O (1.5đ)</div>
+            <p class="text-slate-600 mt-1">Miền nguyên [-1000, 1000], độ dài 0..1000; 2 ví dụ phiếu, xử lý rỗng, trùng lặp, không tìm thấy và validator chặn lỗi.</p>
+          </div>
+          <div class="p-3 rounded-xl border border-slate-200 bg-white">
+            <div class="font-bold text-indigo-700">C2. Biểu diễn dữ liệu tự cài (2.0đ)</div>
+            <p class="text-slate-600 mt-1">Tự cài đặt 100% <code class="mono">Nut</code> và <code class="mono">DanhSachLienKet(dau, duoi, so_nut)</code> kèm kiểm tra bất biến <code class="mono">kiem_tra_bat_bien</code>.</p>
+          </div>
+          <div class="p-3 rounded-xl border border-slate-200 bg-white">
+            <div class="font-bold text-indigo-700">C3. Tính đúng &amp; Lần vết (2.5đ)</div>
+            <p class="text-slate-600 mt-1">Bảng truy vết từng bước ca VD01, chứng minh bất biến vòng lặp <code class="mono">(truoc, hien_tai)</code> và đại lượng giảm ngặt dừng sau ≤ n bước.</p>
+          </div>
+          <div class="p-3 rounded-xl border border-slate-200 bg-white">
+            <div class="font-bold text-indigo-700">C4. Kiểm thử &amp; Độ phức tạp (2.0đ)</div>
+            <p class="text-slate-600 mt-1">12/12 ca độc lập PASS (50/50 asserts), ánh xạ đủ 5 ca phiếu, khảo sát 3 quy mô Q1(5), Q2(20), Q3(100) tách riêng thao tác in.</p>
+          </div>
+          <div class="p-3 rounded-xl border border-slate-200 bg-white">
+            <div class="font-bold text-indigo-700">C5. Báo cáo, 11 Ảnh &amp; GitHub (1.0đ)</div>
+            <p class="text-slate-600 mt-1">Đủ 11 ảnh thực thi cá nhân A01–A11, clone sạch chạy lại và đồng bộ DOCX, PDF, ZIP, TXT.</p>
+          </div>
+          <div class="p-3 rounded-xl border border-slate-200 bg-white">
+            <div class="font-bold text-indigo-700">C6. Bảo vệ &amp; Giải thích (1.0đ)</div>
+            <p class="text-slate-600 mt-1">Hỗ trợ nhập và lần vết input mới trực tiếp ngay tại Tab 1; nêu rõ bài học cập nhật con trỏ <code class="mono">duoi</code> khi xóa nút cuối.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Source Code Viewer -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-4 sm:px-6 py-3.5 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap gap-1.5">
+            <button id="codeBtn-detai" type="button" onclick="switchCodeFile('detai')" class="code-file-btn px-3 py-1.5 rounded-lg text-xs font-bold mono bg-indigo-600 text-white">
+              src/DeTai.jl
+            </button>
+            <button id="codeBtn-demo" type="button" onclick="switchCodeFile('demo')" class="code-file-btn px-3 py-1.5 rounded-lg text-xs font-bold mono text-slate-300 hover:bg-white/10">
+              demo.jl
+            </button>
+            <button id="codeBtn-runtests" type="button" onclick="switchCodeFile('runtests')" class="code-file-btn px-3 py-1.5 rounded-lg text-xs font-bold mono text-slate-300 hover:bg-white/10">
+              test/runtests.jl
+            </button>
+            <button id="codeBtn-scales" type="button" onclick="switchCodeFile('scales')" class="code-file-btn px-3 py-1.5 rounded-lg text-xs font-bold mono text-slate-300 hover:bg-white/10">
+              scales.jl
+            </button>
+          </div>
+          <button id="btnCopySource" type="button" onclick="copyCurrentSourceCode()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/20 text-white transition">
+            📋 Sao chép mã nguồn
+          </button>
+        </div>
+        <pre id="sourceCodeDisplay" class="p-4 sm:p-6 bg-slate-950 text-slate-100 text-xs mono overflow-x-auto max-h-[540px] leading-relaxed"></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-8 py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <div>
+        Đồ án Học phần Cấu trúc dữ liệu và giải thuật (<span class="mono font-semibold text-slate-700">INT13185 — Nhóm 03</span>) • Đề tài <span class="mono font-semibold text-indigo-600">DT061</span>
+      </div>
+      <div>
+        Sinh viên: <strong>Lê Hoàng Phúc</strong> (<span class="mono">N24DCDT073</span> — <span class="mono">D24CQDT01-N</span>) • GVHD: <strong>ThS. Hồ Nhựt Minh</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Script -->
+  <!-- 1. Tầng Thuật toán DSLK đơn -->
+  <script src="thuat_toan/dslk_don.js"></script>
+  <!-- 2. Tầng Dữ liệu 12 ca kiểm thử & Mã nguồn -->
+  <script src="du_lieu/bo_12_ca_kiem_thu.js"></script>
+  <!-- 3. Tầng Điều khiển Giao diện & Biểu đồ -->
+  <script src="giao_dien/dieu_khien_ui.js"></script>
+</body>
+</html>

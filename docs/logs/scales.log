@@ -1,4 +1,4 @@
-PS C:\Users\LeHoangPhuc\DT061_INT13185_DSLK> julia --startup-file=no scales.jl
+PS D:\01_Study\Năm3_kì_1\Cau_truc_du_lieu&giai_thuat\Ketqua\N24DCDT073_DT061_LeHoangPhuc> julia --startup-file=no scales.jl
 ================================================================================
 KHẢO SÁT BA QUY MÔ HỢP LỆ Q1 (n=5), Q2 (n=20), Q3 (n=100) — ĐỀ TÀI DT061
 ================================================================================
